@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import axios from "axios";
-import styles from "../styles/Recommendations.module.css";
-import FullRecommendations from "./recommendations/FullRecommendations";
+import styles from "../../styles/Recommendations.module.css";
+import FullRecommendations from "../recommendations/FullRecommendations";
 
 export default function Recommendations() {
   const [recs, setRecs] = useState(null);

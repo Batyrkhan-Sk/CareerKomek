@@ -1,7 +1,6 @@
 export default function RecommendationsBody({ recs, styles }) {
   return (
     <>
-      {/* Career Paths */}
       {recs.careerPaths && recs.careerPaths.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Recommended Career Paths</h2>
@@ -29,7 +28,6 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {/* Legacy Careers */}
       {recs.careers && recs.careers.length > 0 && !recs.careerPaths && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Suggested Careers</h2>
@@ -41,7 +39,6 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {/* Skill Gaps */}
       {recs.skillGaps && recs.skillGaps.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Skills to Develop</h2>
@@ -61,7 +58,6 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {/* Legacy Skills */}
       {recs.skills_to_learn && recs.skills_to_learn.length > 0 && !recs.skillGaps && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Skills to Learn</h2>
@@ -73,7 +69,6 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {/* Learning Roadmap */}
       {recs.learningRoadmap && recs.learningRoadmap.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Learning Roadmap</h2>
@@ -129,7 +124,6 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {/* Recommended Courses */}
       {recs.courses && recs.courses.length > 0 && !recs.learningRoadmap && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Recommended Courses</h2>
@@ -141,7 +135,6 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {/* Immediate Actions */}
       {recs.immediateActions && recs.immediateActions.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Start Today</h2>

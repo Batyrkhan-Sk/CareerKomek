@@ -1,11 +1,11 @@
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
-import Auth from "./components/Auth";
+import Auth from "./components/auth/Auth";
 import Quiz from "./components/quiz/Quiz";
-import Recommendations from "./components/Recommendations";
-import ResumeBuilder from "./components/ResumeBuilder";
-import InternshipMap from "./components/InternshipMap";
+import Recommendations from "./components/recommendations/RecommendationsWrapper";
+import ResumeBuilder from "./components/resume/ResumeBuilder";
+import InternshipMap from "./components/internships/InternshipMap";
 import "./App.css";
 
 function ProtectedRoute({ children }) {
