@@ -1,4 +1,4 @@
-import styles from '../../styles/QuizComponents.module.css';
+import styles from './styles/QuizComponents.module.css';
 
 export function ProgressBar({ current, total }) {
   const progress = ((current + 1) / total) * 100;

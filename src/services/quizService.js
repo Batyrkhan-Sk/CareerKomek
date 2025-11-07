@@ -12,12 +12,17 @@ export async function generateQuiz(profile) {
 }
 
 export function aggregateAnswers(initialProfile, quizAnswers) {
-  const skills = new Set(
-    initialProfile.skills.split(",").map(s => s.trim()).filter(Boolean)
-  );
-  const interests = new Set(
-    initialProfile.interests.split(",").map(i => i.trim()).filter(Boolean)
-  );
+  const parseSkillsOrInterests = (data) => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data.filter(Boolean);
+    if (typeof data === 'string') {
+      return data.split(",").map(s => s.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
+  const skills = new Set(parseSkillsOrInterests(initialProfile.skills));
+  const interests = new Set(parseSkillsOrInterests(initialProfile.interests));
 
   quizAnswers.forEach(answer => {
     if (answer.category === "skills" && answer.answer.text) {
@@ -33,9 +38,9 @@ export function aggregateAnswers(initialProfile, quizAnswers) {
   return {
     skills: Array.from(skills),
     interests: Array.from(interests),
-    academicFocus: initialProfile.academicFocus,
-    careerGoal: initialProfile.careerGoal,
-    experienceLevel: initialProfile.experienceLevel,
+    academicFocus: initialProfile.academicFocus || "",
+    careerGoal: initialProfile.careerGoal || "",
+    experienceLevel: initialProfile.experienceLevel || "beginner",
     updatedAt: new Date().toISOString()
   };
 }

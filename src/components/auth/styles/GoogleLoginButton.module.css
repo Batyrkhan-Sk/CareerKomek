@@ -1,0 +1,30 @@
+.googleButton {
+  width: 100%;
+  padding: 14px;
+  background-color: white;
+  color: #2d2d2d;
+  border: 2px solid #4a4a4a;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.googleButton:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.googleButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.icon {
+  font-size: 1.4rem;
+}

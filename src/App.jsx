@@ -1,42 +1,42 @@
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
 import Auth from "./components/auth/Auth";
+import Home from "./components/home/Home";
 import Quiz from "./components/quiz/Quiz";
-import Recommendations from "./components/recommendations/RecommendationsWrapper";
-import ResumeBuilder from "./components/resume/ResumeBuilder";
+import RecommendationsWrapper from "./components/recommendations/RecommendationsWrapper";
+import ResumeUpload from "./components/resume/ResumeUpload";
 import InternshipMap from "./components/internships/InternshipMap";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Navbar from "./common/navbar/Navbar";
+import GlobalLoader from "./common/loader/GlobalLoader";
 import "./App.css";
 
-function ProtectedRoute({ children }) {
-  const [user] = useAuthState(auth);
-  return user ? children : <Navigate to="/" replace />;
-}
-
 export default function App() {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
+
+  if (loading) {
+    return <GlobalLoader message="Loading Career Bot..." />;
+  }
 
   return (
     <div>
-      <nav className="navbar">
-        {user ? (
-          <>
-            <Link to="/quiz">Quiz</Link>
-            <Link to="/recommendations">Recommendations</Link>
-            <Link to="/resume">Resume</Link>
-            <Link to="/map">Map</Link>
-
-            <button onClick={() => auth.signOut()}>
-              Logout
-            </button>
-          </>
-        ) : (
-          <Link to="/">Login</Link>
-        )}
-      </nav>
+      {user && <Navbar />}
 
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route
+          path="/auth"
+          element={user ? <Navigate to="/home" replace /> : <Auth />}
+        />
+
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/quiz"
           element={
@@ -49,7 +49,7 @@ export default function App() {
           path="/recommendations"
           element={
             <ProtectedRoute>
-              <Recommendations />
+              <RecommendationsWrapper />
             </ProtectedRoute>
           }
         />
@@ -57,7 +57,7 @@ export default function App() {
           path="/resume"
           element={
             <ProtectedRoute>
-              <ResumeBuilder />
+              <ResumeUpload />
             </ProtectedRoute>
           }
         />
@@ -69,6 +69,8 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
     </div>
   );

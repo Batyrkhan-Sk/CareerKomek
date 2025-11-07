@@ -1,0 +1,273 @@
+.container {
+  min-height: 100vh;
+  background-color: #2d2d2d;
+  padding: 60px 40px;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.titleHighlight {
+  color: #ff5a6e;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #ff5a6e 0%, transparent 100%);
+  margin: 30px 0;
+}
+
+.uploadSection {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #2d2d2d;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  background-color: #ff5a6e;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.uploadBox {
+  border: 2px dashed #666;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  background-color: #2d2d2d;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.uploadBox:hover {
+  border-color: #ff5a6e;
+  background-color: #333;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileLabel {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #ff5a6e;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.fileLabel:hover {
+  background-color: #ff4158;
+}
+
+.fileName {
+  margin-top: 15px;
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.analyzeButton {
+  width: 100%;
+  padding: 16px;
+  background-color: #ff5a6e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.analyzeButton:hover:not(:disabled) {
+  background-color: #ff4158;
+}
+
+.analyzeButton:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+.error {
+  background-color: #ff5a6e22;
+  border-left: 4px solid #ff5a6e;
+  padding: 15px;
+  border-radius: 6px;
+  color: #ff5a6e;
+  margin-bottom: 20px;
+}
+
+.resultsContainer {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid #4a4a4a;
+}
+
+.resultsTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #ff5a6e;
+}
+
+.scoreCard {
+  background: linear-gradient(135deg, #ff5a6e 0%, #ff4158 100%);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.scoreLabel {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+
+.scoreValue {
+  font-size: 3.5rem;
+  font-weight: 700;
+}
+
+.analysisGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.analysisCard {
+  background-color: #2d2d2d;
+  padding: 25px;
+  border-radius: 10px;
+  border-left: 4px solid;
+}
+
+.analysisCard.strengths {
+  border-color: #4caf50;
+}
+
+.analysisCard.weaknesses {
+  border-color: #ff5a6e;
+}
+
+.analysisCard.suggestions {
+  border-color: #ff9800;
+}
+
+.analysisCard.keywords {
+  border-color: #9c27b0;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cardTitle.strengths {
+  color: #4caf50;
+}
+
+.cardTitle.weaknesses {
+  color: #ff5a6e;
+}
+
+.cardTitle.suggestions {
+  color: #ff9800;
+}
+
+.cardTitle.keywords {
+  color: #9c27b0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listItem {
+  padding: 10px 0;
+  padding-left: 25px;
+  position: relative;
+  color: #ddd;
+  line-height: 1.5;
+}
+
+.listItem::before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: inherit;
+  font-weight: bold;
+}
+
+.formatIssues {
+  background-color: #2d2d2d;
+  padding: 25px;
+  border-radius: 10px;
+  border-left: 4px solid #ff9800;
+}
+
+.formatTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #ff9800;
+}
+
+.issueItem {
+  padding: 12px 0;
+  border-bottom: 1px solid #4a4a4a;
+}
+
+.issueItem:last-child {
+  border-bottom: none;
+}
+
+.issueText {
+  color: #ddd;
+  margin-bottom: 5px;
+}
+
+.issueImpact {
+  color: #aaa;
+  font-size: 0.9rem;
+  font-style: italic;
+}

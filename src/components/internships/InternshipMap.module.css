@@ -1,0 +1,111 @@
+.container {
+  min-height: 100vh;
+  background-color: #2d2d2d;
+  padding: 60px 40px;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.titleHighlight {
+  color: #ff5a6e;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #ff5a6e 0%, transparent 100%);
+  margin: 30px 0;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.searchSection {
+  background-color: #2d2d2d;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.searchContainer {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 300px;
+  padding: 14px 18px;
+  background-color: #2d2d2d;
+  border: 2px solid #4a4a4a;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #ff5a6e;
+}
+
+.searchInput::placeholder {
+  color: #888;
+}
+
+.searchButton {
+  padding: 14px 32px;
+  background-color: #ff5a6e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.searchButton:hover {
+  background-color: #ff4158;
+}
+
+.searchButton:active {
+  transform: scale(0.98);
+}
+
+.mapContainer {
+  background-color: #2d2d2d
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.mapWrapper {
+  width: 100%;
+  height: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #4a4a4a;
+}

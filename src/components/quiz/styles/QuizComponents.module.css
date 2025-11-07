@@ -1,0 +1,125 @@
+.progressContainer {
+  width: 100%;
+  margin-bottom: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #ddd;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background-color: #2d2d2d;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff5a6e 0%, #ff4158 100%);
+  border-radius: 0;
+  transition: width 0.3s ease;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #4a4a4a;
+  border-top: 5px solid #ff5a6e;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingMessage {
+  font-size: 1rem;
+  color: #ddd;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+.input {
+  padding: 16px 20px;
+  background-color: #2d2d2d;
+  border: 2px solid #4a4a4a;
+  border-radius: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #ff5a6e;
+}
+
+.input::placeholder {
+  color: #888;
+}
+
+.optionButton {
+  width: 100%;
+  padding: 20px 24px;
+  background-color: #2d2d2d;
+  border: 2px solid #4a4a4a;
+  border-radius: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.optionButton:hover {
+  border-color: #ff5a6e;
+  background-color: #333;
+}
+
+.optionButton.selected {
+  background-color: #ff5a6e;
+  border-color: #ff5a6e;
+  color: white;
+}
+
+.optionButton:active {
+  transform: scale(0.98);
+}

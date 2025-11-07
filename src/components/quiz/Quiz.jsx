@@ -1,48 +1,54 @@
-import { useState } from "react";
 import { auth, db } from "../../firebase";
 import { setDoc, doc } from "firebase/firestore";
-import { generateQuiz, aggregateAnswers } from "../../services/quizService";
+import { useState } from "react";
+import axios from "axios";
+import Modal from "../modal/Modal";
+import { generateQuiz } from "../../services/quizService";
 import ProfileForm from "./steps/ProfileForm";
 import Loading from "./steps/Loading";
 import QuizStep from "./steps/QuizStep";
 import QuizComplete from "./steps/QuizComplete";
-
-const QuizSteps = {
-  FORM: "form",
-  LOADING: "loading",
-  QUIZ: "quiz",
-  COMPLETE: "complete",
-};
+import { QUIZ_STEPS } from "../../const/quizSteps";
+import useQuizState from "../../hooks/useQuizState";
+import { INITIAL_PROFILE } from "../../const/initialProfile";
 
 export default function Quiz() {
-  const [step, setStep] = useState(QuizSteps.FORM);
-  const [profile, setProfile] = useState({
-    skills: "",
-    interests: "",
-    academicFocus: "",
-    careerGoal: "",
-    experienceLevel: "beginner",
-  });
-  const [questions, setQuestions] = useState([]);
-  const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const {
+    step,
+    setStep,
+    profile,
+    setProfile,
+    questions,
+    setQuestions,
+    currentQ,
+    setCurrentQ,
+    answers,
+    setAnswers,
+    selectedOption,
+    setSelectedOption,
+    resetQuiz,
+  } = useQuizState(INITIAL_PROFILE);
+
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleFormSubmit = async (profileData) => {
-    setStep(QuizSteps.LOADING);
+    setStep(QUIZ_STEPS.LOADING);
     try {
       const quizQuestions = await generateQuiz(profileData);
       setProfile(profileData);
       setQuestions(quizQuestions);
-      setStep(QuizSteps.QUIZ);
+      setCurrentQ(0);
+      setAnswers([]);
+      setSelectedOption(null);
+      setStep(QUIZ_STEPS.QUIZ);
     } catch (err) {
       console.error(err);
-      alert("Failed to generate quiz.");
-      setStep(QuizSteps.FORM);
+      setModalMessage("Failed to generate quiz.");
+      setStep(QUIZ_STEPS.FORM);
     }
   };
 
-    const handleNext = () => {
+  const handleNext = () => {
     if (!selectedOption) return;
 
     const existingAnswer = answers.find((a, i) => i === currentQ);
@@ -59,59 +65,75 @@ export default function Quiz() {
 
     if (currentQ < questions.length - 1) {
       setCurrentQ((prev) => prev + 1);
-      const nextAnswer = answers[currentQ + 1];
-      setSelectedOption(nextAnswer ? nextAnswer.answer : null);
+      setSelectedOption(answers[currentQ + 1]?.answer || null);
     } else {
-      setStep(QuizSteps.COMPLETE);
+      setStep(QUIZ_STEPS.COMPLETE);
     }
   };
 
-
   const handleBack = () => {
-  setCurrentQ((prev) => prev - 1);
+    if (currentQ === 0) return;
+    setCurrentQ((prev) => prev - 1);
+    setSelectedOption(answers[currentQ - 1]?.answer || null);
+    setAnswers((prev) => prev.slice(0, -1));
+  };
 
-  const prevAnswer = answers[answers.length - 1];
-  setSelectedOption(prevAnswer ? prevAnswer.answer : null);
-
-  setAnswers((prev) => prev.slice(0, -1));
-};
-
-
-  const handleSave = async () => {
+  const handleSave = async (finalProfile) => {
     const user = auth.currentUser;
-    if (!user) return alert("Sign in first.");
-
-    const finalProfile = aggregateAnswers(profile, answers);
+    if (!user) {
+      setModalMessage("Sign in first.");
+      return false;
+    }
 
     try {
       await setDoc(doc(db, "users", user.uid, "profile", "info"), finalProfile, { merge: true });
-      alert("Profile saved successfully!");
+      console.log("Profile saved successfully for UID:", user.uid);
+
+      const url = `${import.meta.env.VITE_CLOUD_FUNC_URL}/generateRecommendations`;
+      console.log("Sending request to:", url, "with UID:", user.uid);
+      const response = await axios.post(url, { uid: user.uid });
+
+      console.log("Recommendations generated:", response.data);
+      resetQuiz();
+      return true;
     } catch (err) {
-      console.error(err);
-      alert("Error saving profile.");
+      console.error("Save or recommendation error:", err);
+      if (err.response) {
+        console.error("Server response:", err.response.data);
+      }
+      setModalMessage("Failed to save or generate recommendations.");
+      return false;
     }
   };
 
-  switch (step) {
-    case QuizSteps.FORM:
-      return <ProfileForm profile={profile} setProfile={setProfile} onSubmit={handleFormSubmit} />;
-    case QuizSteps.LOADING:
-      return <Loading message="Generating your personalized quiz..." />;
-    case QuizSteps.QUIZ:
-      return (
-        <QuizStep
-          question={questions[currentQ]}
-          current={currentQ}
-          total={questions.length}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-          onNext={handleNext}
-          onBack={currentQ > 0 ? handleBack : null}
-        />
-      );
-    case QuizSteps.COMPLETE:
-      return <QuizComplete profile={profile} answers={answers} onSave={handleSave} />;
-    default:
-      return null;
-  }
+  return (
+    <>
+      {(() => {
+        switch (step) {
+          case QUIZ_STEPS.FORM:
+            return <ProfileForm profile={profile} setProfile={setProfile} onSubmit={handleFormSubmit} />;
+          case QUIZ_STEPS.LOADING:
+            return <Loading message="Generating your personalized quiz..." />;
+          case QUIZ_STEPS.QUIZ:
+            return (
+              <QuizStep
+                question={questions[currentQ]}
+                current={currentQ}
+                total={questions.length}
+                selectedOption={selectedOption}
+                setSelectedOption={setSelectedOption}
+                onNext={handleNext}
+                onBack={currentQ > 0 ? handleBack : null}
+              />
+            );
+          case QUIZ_STEPS.COMPLETE:
+            return <QuizComplete profile={profile} answers={answers} onSave={handleSave} />;
+          default:
+            return null;
+        }
+      })()}
+
+      <Modal message={modalMessage} onClose={() => setModalMessage("")} />
+    </>
+  );
 }

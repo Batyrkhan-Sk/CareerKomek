@@ -1,7 +1,17 @@
 export default function RecommendationsBody({ recs, styles }) {
+  // ✅ Helper function to format salary display
+  const formatSalary = (path) => {
+    if (path.salaryMinKZT && path.salaryMaxKZT) {
+      const minFormatted = (path.salaryMinKZT / 1000000).toFixed(1);
+      const maxFormatted = (path.salaryMaxKZT / 1000000).toFixed(1);
+      return `₸${minFormatted}M - ₸${maxFormatted}M / year`;
+    }
+    return path.salary || "Salary info not available";
+  };
+
   return (
     <>
-      {recs.careerPaths && recs.careerPaths.length > 0 && (
+      {recs?.careerPaths?.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Recommended Career Paths</h2>
           <div className={styles.pathsGrid}>
@@ -13,22 +23,26 @@ export default function RecommendationsBody({ recs, styles }) {
                 <div className={styles.pathMeta}>
                   <div className={styles.metaItem}>
                     <span className={styles.metaLabel}>Salary</span>
-                    <span className={styles.metaValue}>{path.salary}</span>
+                    {/* ✅ FIX: Use the new formatSalary helper */}
+                    <span className={styles.metaValue}>{formatSalary(path)}</span>
                   </div>
                   <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Demand</span>
                     <span className={`${styles.demandBadge} ${styles[path.demandLevel]}`}>
                       {path.demandLevel}
                     </span>
                   </div>
                 </div>
+                {/* ✅ BONUS: Display salary info if available */}
+                {path.salaryInfo && (
+                  <p className={styles.salaryInfo}>{path.salaryInfo}</p>
+                )}
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {recs.careers && recs.careers.length > 0 && !recs.careerPaths && (
+      {recs?.careers?.length > 0 && !recs?.careerPaths && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Suggested Careers</h2>
           <div className={styles.listGrid}>
@@ -39,7 +53,7 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {recs.skillGaps && recs.skillGaps.length > 0 && (
+      {recs?.skillGaps?.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Skills to Develop</h2>
           <div className={styles.skillsGrid}>
@@ -58,7 +72,7 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {recs.skills_to_learn && recs.skills_to_learn.length > 0 && !recs.skillGaps && (
+      {recs?.skills_to_learn?.length > 0 && !recs?.skillGaps && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Skills to Learn</h2>
           <div className={styles.listGrid}>
@@ -69,7 +83,7 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {recs.learningRoadmap && recs.learningRoadmap.length > 0 && (
+      {recs?.learningRoadmap?.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Learning Roadmap</h2>
           <div className={styles.roadmapTimeline}>
@@ -124,7 +138,7 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {recs.courses && recs.courses.length > 0 && !recs.learningRoadmap && (
+      {recs?.courses?.length > 0 && !recs?.learningRoadmap && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Recommended Courses</h2>
           <div className={styles.listGrid}>
@@ -135,7 +149,7 @@ export default function RecommendationsBody({ recs, styles }) {
         </section>
       )}
 
-      {recs.immediateActions && recs.immediateActions.length > 0 && (
+      {recs?.immediateActions?.length > 0 && (
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Start Today</h2>
           <div className={styles.actionsGrid}>

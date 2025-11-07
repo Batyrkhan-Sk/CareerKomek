@@ -1,4 +1,4 @@
-import styles from "../../styles/Recommendations.module.css";
+import styles from "./styles/Recommendations.module.css";
 
 export default function RecommendationsFooter({ generatedAt }) {
   return (

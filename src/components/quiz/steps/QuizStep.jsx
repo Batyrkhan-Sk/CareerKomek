@@ -1,5 +1,5 @@
-import { OptionButton, ProgressBar } from "../QuizComponents";
-import styles from "../../../styles/Quiz.module.css";
+import { ProgressBar, OptionButton } from "../QuizComponents";
+import styles from "../styles/QuizStep.module.css";
 
 export default function QuizStep({ question, current, total, selectedOption, setSelectedOption, onNext, onBack }) {
   return (
@@ -20,9 +20,14 @@ export default function QuizStep({ question, current, total, selectedOption, set
       </div>
 
       <div className={styles.buttonGroup}>
-        {onBack && <button onClick={onBack} className={styles.buttonSecondary}>Back</button>}
+        {onBack ? (
+          <button onClick={onBack} className={styles.buttonSecondary}>Back</button>
+        ) : (
+          <button className={`${styles.buttonSecondary} ${styles.hiddenButton}`}>Back</button>
+        )}
+
         <button onClick={onNext} disabled={!selectedOption} className={styles.button}>
-          {current < total - 1 ? 'Next ' : 'Finish'}
+          {current < total - 1 ? 'Next' : 'Finish'}
         </button>
       </div>
     </div>

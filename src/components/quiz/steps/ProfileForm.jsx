@@ -1,20 +1,47 @@
+import { useState } from "react";
 import { FormInput } from "../QuizComponents";
-import styles from "../../../styles/Quiz.module.css";
+import Modal from "../../modal/Modal";
+import styles from "../styles/ProfileForm.module.css";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../../firebase";
 
 export default function ProfileForm({ profile, setProfile, onSubmit }) {
+  const [modalMessage, setModalMessage] = useState("");
+
   const isFormComplete =
     profile.skills.trim() &&
     profile.interests.trim() &&
     profile.academicFocus.trim() &&
     profile.careerGoal.trim();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormComplete) {
-      alert("Please fill all fields before continuing.");
+
+    const user = auth.currentUser;
+    if (!user) {
+      setModalMessage("You must be logged in to save your profile.");
       return;
     }
-    onSubmit(profile);
+
+    const formattedProfile = {
+      ...profile,
+      skills: profile.skills.split(",").map((s) => s.trim()),
+      interests: profile.interests.split(",").map((i) => i.trim()),
+      experienceLevel: profile.experienceLevel || "beginner",
+    };
+
+    try {
+      await setDoc(
+        doc(db, "users", user.uid, "profile", "info"),
+        formattedProfile,
+        { merge: true }
+      );
+
+      onSubmit(formattedProfile);
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      setModalMessage("Failed to save profile. Try again.");
+    }
   };
 
   return (
@@ -26,7 +53,7 @@ export default function ProfileForm({ profile, setProfile, onSubmit }) {
           label="Your Skills (comma separated)"
           value={profile.skills}
           onChange={(e) => setProfile({ ...profile, skills: e.target.value })}
-          placeholder="e.g., Python, Communication"
+          placeholder="React, Tensorflow, Python"
           required
         />
 
@@ -34,7 +61,7 @@ export default function ProfileForm({ profile, setProfile, onSubmit }) {
           label="Your Interests (comma separated)"
           value={profile.interests}
           onChange={(e) => setProfile({ ...profile, interests: e.target.value })}
-          placeholder="e.g., AI, Web Development"
+          placeholder="AI, Web Development"
           required
         />
 
@@ -42,7 +69,7 @@ export default function ProfileForm({ profile, setProfile, onSubmit }) {
           label="Academic Focus"
           value={profile.academicFocus}
           onChange={(e) => setProfile({ ...profile, academicFocus: e.target.value })}
-          placeholder="e.g., Computer Science"
+          placeholder="Machine Learning, Data Science"
           required
         />
 
@@ -50,7 +77,7 @@ export default function ProfileForm({ profile, setProfile, onSubmit }) {
           label="Career Goal"
           value={profile.careerGoal}
           onChange={(e) => setProfile({ ...profile, careerGoal: e.target.value })}
-          placeholder="e.g., Software Engineer"
+          placeholder="Machine Learning Engineer"
           required
         />
 
@@ -67,14 +94,12 @@ export default function ProfileForm({ profile, setProfile, onSubmit }) {
           </select>
         </div>
 
-        <button
-          type="submit"
-          className={styles.button}
-          disabled={!isFormComplete}
-        >
-          Generate My Quiz
+        <button type="submit" className={styles.button} disabled={!isFormComplete}>
+          Generate Quiz
         </button>
       </form>
+
+      <Modal message={modalMessage} onClose={() => setModalMessage("")} />
     </div>
   );
 }

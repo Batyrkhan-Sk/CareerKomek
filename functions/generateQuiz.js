@@ -96,13 +96,11 @@ async function callGeminiAPI(apiKey, prompt) {
 
   logger.info("Raw Gemini response (first 200 chars): " + text.substring(0, 200));
 
-  // Force remove markdown and explanations
   text = text
     .replace(/```json/gi, "")
     .replace(/```/g, "")
     .trim();
 
-  // Extract JSON only
   const startIndex = text.indexOf("[");
   const endIndex = text.lastIndexOf("]");
 

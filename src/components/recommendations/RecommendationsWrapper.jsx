@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import axios from "axios";
-import styles from "../../styles/Recommendations.module.css";
+import Modal from "../modal/Modal";
+import styles from "./styles/Recommendations.module.css";
 import FullRecommendations from "../recommendations/FullRecommendations";
 
-export default function Recommendations() {
+export default function RecommendationsWrapper() {
   const [recs, setRecs] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [modalMessage, setModalMessage] = useState("");
 
   const loadRecommendations = async (uid) => {
     try {
@@ -16,10 +18,15 @@ export default function Recommendations() {
       const ref = doc(db, "users", uid, "recommendations", "latest");
       const snap = await getDoc(ref);
 
-      setRecs(snap.exists() ? snap.data() : null);
+      if (snap.exists()) {
+        setRecs(snap.data());
+      } else {
+        setRecs(null);
+      }
+      setLoading(false);
     } catch (err) {
       console.error("Error loading recommendations:", err);
-    } finally {
+      setModalMessage("Failed to load recommendations.");
       setLoading(false);
     }
   };
@@ -30,12 +37,20 @@ export default function Recommendations() {
 
     try {
       const url = `${import.meta.env.VITE_CLOUD_FUNC_URL}/generateRecommendations`;
-      await axios.post(url, { uid: user.uid });
 
-      setTimeout(() => loadRecommendations(user.uid), 1500);
+      // ✅ FIX: Wait for and use the response from Cloud Function
+      const response = await axios.post(url, { uid: user.uid });
+
+      // ✅ FIX: Use the returned data immediately
+      const recommendations = response.data;
+
+      // ✅ FIX: Load from Firestore to get the generatedAt timestamp
+      await loadRecommendations(user.uid);
+
+      setLoading(false);
     } catch (err) {
       console.error("Error refreshing recommendations:", err);
-      alert("Failed to generate recommendations. Please try again.");
+      setModalMessage("Failed to generate recommendations. Please try again.");
       setLoading(false);
     }
   };
@@ -54,40 +69,34 @@ export default function Recommendations() {
     return unsubscribe;
   }, []);
 
-  if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}></div>
-        <p className={styles.loadingText}>Generating your personalized roadmap...</p>
-      </div>
-    );
-  }
-
-  if (!recs) {
-    return (
-      <div className={styles.emptyContainer}>
-        <div className={styles.emptyContent}>
+  return (
+    <>
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Your personalized roadmap is loading...</p>
+        </div>
+      ) : !recs ? (
+        <div className={styles.emptyContainer}>
           <h1 className={styles.emptyTitle}>Ready to Launch Your Career?</h1>
-          <p className={styles.emptySubtitle}>
-            Get AI-powered recommendations tailored to your skills and goals
-          </p>
-          <button
-            onClick={refreshAI}
-            disabled={!user}
-            className={styles.ctaButton}
-          >
+          <p className={styles.emptySubtitle}>Get your personalized roadmap</p>
+          <button onClick={refreshAI} disabled={!user} className={styles.ctaButton}>
             Generate My Roadmap
           </button>
         </div>
-      </div>
-    );
-  }
+      ) : recs.careerPaths?.length === 0 ? (
+        <div className={styles.emptyContainer}>
+          <h1 className={styles.emptyTitle}>Profile Incomplete</h1>
+          <p className={styles.emptySubtitle}>Add more skills or interests</p>
+          <button onClick={refreshAI} className={styles.ctaButton}>
+            Try Again
+          </button>
+        </div>
+      ) : (
+        <FullRecommendations recs={recs} refreshAI={refreshAI} user={user} />
+      )}
 
-  return (
-    <FullRecommendations
-      recs={recs}
-      refreshAI={refreshAI}
-      user={user}
-    />
+      <Modal message={modalMessage} onClose={() => setModalMessage("")} />
+    </>
   );
 }
