@@ -8,6 +8,12 @@ CareerKomek is a web application designed to assist users in their career develo
 
 **Link:** https://careerbot-3b56a.web.app
 
+**Note:** If the quiz generation fails, please retry the generation.
+
+## Presentation
+
+**Link:** https://www.canva.com/design/DAG357-SWWU/-4klACsVoaLr1ftDITQfXw/edit?utm_content=DAG357-SWWU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
 ## Architecture
 
 ### Frontend Structure
@@ -94,5 +100,3 @@ frontend/
 3. **Take Assessment:** Complete the career assessment quiz
 4. **Get Recommendations:** Receive personalized career guidance
 5. **Explore Internships:** Browse and apply to relevant opportunities
-
-**Note:** If the quiz generation fails, please retry the generation.
